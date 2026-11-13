@@ -1,0 +1,16 @@
+- name: Mettre à jour la liste des paquets
+  apt:
+    update_cache: true
+
+- name: Installer les outils de base
+  apt:
+    name:
+      - curl
+      - htop
+      - ufw
+      - ca-certificates
+    state: present
+
+- name: Régler le fuseau horaire
+  timezone:
+    name: Europe/Paris

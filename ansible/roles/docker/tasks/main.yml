@@ -1,0 +1,37 @@
+- name: Installer la dépendance du module deb822
+  apt:
+    name: python3-debian
+    state: present
+
+- name: Ajouter le dépôt Docker
+  deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/debian
+    suites: "{{ ansible_distribution_release }}"
+    components: stable
+    architectures: amd64
+    signed_by: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Installer Docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+
+- name: Démarrer Docker au boot
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Ajouter l'utilisateur au groupe docker
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true

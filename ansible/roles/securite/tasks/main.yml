@@ -1,0 +1,20 @@
+- name: Durcir la configuration SSH
+  copy:
+    dest: /etc/ssh/sshd_config.d/99-durcissement.conf
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+      MaxAuthTries 3
+    mode: "0644"
+  notify: Redémarrer SSH
+
+- name: Autoriser SSH dans le pare-feu
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Bloquer tout le reste par défaut
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
